@@ -8,6 +8,6 @@ exit_if_failed() {
 }
 
 echo "putting files..."
-find . -maxdepth 1 -name "*.py" -not -name "test*.py" -exec bash -c "echo \"put {}\" && ampy put {} || kill \$PPID"  \;
+find . -maxdepth 1 -name "*.mpy" -exec bash -c "echo \"put {}\" && ampy put {} || kill \$PPID"  \;
 exit_if_failed
 echo "PUT SUCCESS"
