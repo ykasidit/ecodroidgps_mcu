@@ -3,13 +3,9 @@ import time
 
 
 def test():
-    lat = 123.1234567
-    lon = -1.0*lat
-    ts = int(time.time())
-    print("ori ts: {}".format(ts))
-    ba = edg_gps_parser.gen_ecodroidgps_gap_broadcast_buffer(lat, lon, ts)
-    print("braodcast_buff: {}".format(ba))
-    parsed = edg_gps_parser.parse_ecodroidgps_gap_broadcast_buffer(ba)
+    lat, lon, ts, bb = edg_gps_parser.gen_demo_ecodroidgps_gap_broadcast_buffer()
+    print("braodcast_buff: {}".format(bb))
+    parsed = edg_gps_parser.parse_ecodroidgps_gap_broadcast_buffer(bb)
     print("parsed: {}".format(parsed))
     assert parsed["lat"] == lat
     assert parsed["lon"] == lon

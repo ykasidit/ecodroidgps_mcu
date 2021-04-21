@@ -1,5 +1,6 @@
 import math
 import struct
+import time
 
 LAT_LON_RESOLUTION_MULTIPLIER = math.pow(10.0, 7)
 ECODROIDGPS_EID_BROADCAST_HEADER_BYTE_VERSION1 = 0xE1
@@ -58,6 +59,15 @@ def gen_ecodroidgps_gap_broadcast_buffer(lat, lon, timestamp):
     ret += gen_lat_lon_buffer(lat, lon)
     ret += struct.pack('I', int(timestamp))
     return ret
+
+
+def gen_demo_ecodroidgps_gap_broadcast_buffer():
+    lat = 123.1234567
+    lon = -1.0*lat
+    ts = int(time.time())
+    #print("ori ts: {}".format(ts))
+    bb = gen_ecodroidgps_gap_broadcast_buffer(lat, lon, ts)
+    return lat, lon, ts, bb
     
 
 def parse_ecodroidgps_gap_broadcast_buffer(ba):

@@ -1,10 +1,10 @@
-import os
-import machine
 import edg_gap
+import machine
 
 
 def main():
-    print(os.uname())
+    pin = machine.Pin(2, machine.Pin.OUT)
+    pin.value(1)    
     edg_gap.start_gap()
 
 
