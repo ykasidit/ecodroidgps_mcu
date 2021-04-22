@@ -10,7 +10,11 @@ exit_if_failed() {
 echo "putting files..."
 find . -maxdepth 1 -name "*.mpy" -exec bash -c "echo \"put {}\" && ampy put {} || kill \$PPID"  \;
 exit_if_failed
-echo "final put main.py"
-ampy put main.py  # required otherwise somehow only with main.mpy it wont work on boot
+
+echo "final put main.py" # required otherwise somehow only with main.mpy it wont work on boot - confirmed in https://forum.micropython.org/viewtopic.php?t=8410
+ampy put main.py  
+echo "final put boot.py"
+ampy put boot.py
+
 exit_if_failed
 echo "PUT SUCCESS"

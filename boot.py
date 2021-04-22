@@ -1,3 +1,6 @@
+# cant run in linux python
+# pylint: disable=E0401
+
 import esp
 #esp.osdebug(None)
 import uos, machine

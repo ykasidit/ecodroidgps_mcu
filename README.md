@@ -73,5 +73,20 @@ python3 test_get_sys_platform.py
 run a specific test on esp32 device example
 ------------------------------------------
 
+ampy run <test file>
+
+example:
 ampy run test_get_sys_platform.py 
 
+
+test, see output of main operation but in limited loops
+-------------------------------------------------------
+
+ampy run test_edg_gap_main_loop.py 
+
+
+test, see output of main operation but in limited loops
+-------------------------------------------------------
+- reconnect power to device
+- open new emacs instance, shell:
+busybox microcom -s 115200 /dev/ttyUSB0

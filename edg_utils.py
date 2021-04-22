@@ -23,27 +23,6 @@ def get_on_bit_offset_list(val):
     return ret
 
 
-def gen_edg_ln_feature_bitmask_hex_dump_str():
-    import numpy as np
-    # gen lnf bitmask
-    bitmask = int(0)
-
-    ln_bits = [
-        ble_bit_offsets.ln_feature.Instantaneous_Speed_Supported,
-        ble_bit_offsets.ln_feature.Location_Supported,
-        ble_bit_offsets.ln_feature.Elevation_Supported,
-        ble_bit_offsets.ln_feature.UTC_Time_Supported,
-        ble_bit_offsets.ln_feature.Position_Status_Supported
-    ]
-    for bit_offset in ln_bits:
-        print(("turn on bit:", bit_offset))
-        bitmask = bit_utils.set_bit(bitmask, bit_offset)
-
-    buffer = np.uint32(bitmask).tobytes()
-    print(("buffer: {} type: {}", buffer, type(buffer)))
-    return buffer.hex()
-
-
 def bytes_to_hex(ba):
     if not isinstance(ba, bytearray):
         ba = bytearray(ba)

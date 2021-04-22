@@ -1,3 +1,5 @@
+# cant run in linux python
+# pylint: disable=E0401
 # Helpers for generating BLE advertising payloads.
 
 from micropython import const
