@@ -32,6 +32,10 @@ def main_loop(test_mode=False, demo_position=False):
 
     ble = bluetooth.BLE()
     ble.active(True)
+    bdaddr = ble.config('mac')[1] # ex: (0, b'\x10R\x1cg\xfc\xbe')
+    bdaddr_hex = edg_utils.bytes_to_hex(bdaddr)
+    print("bdaddr_hex:", bdaddr_hex)
+
 
     #uart = UART(1, baudrate=9600)
     uart = UART(1, baudrate=9600, bits=8, parity=None, stop=1, tx=15, rx=2, rts=-1, cts=-1, txbuf=256, rxbuf=256, timeout=5000, timeout_char=2)
@@ -129,7 +133,7 @@ def main_loop(test_mode=False, demo_position=False):
 
             # create gap payload from position
             edg_payload = edg_gap_payloads.gen_ecodroidgps_gap_broadcast_buffer(pos["lat"], pos["lon"], pos["ts"])
-            gap_payload = edg_gap_payloads.eddystone_type_adv_data(edg_payload)
+            gap_payload = edg_gap_payloads.eddystone_type_adv_data(edg_payload, name="EDG")
 
             # broadcast ble gap buffer
             print('payload: {}'.format(edg_utils.bytes_to_hex(gap_payload)))
