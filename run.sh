@@ -7,8 +7,5 @@ exit_if_failed() {
     fi
 }
 
-ampy put *.py
-exit_if_failed
-
 ampy run $1
 exit_if_failed
