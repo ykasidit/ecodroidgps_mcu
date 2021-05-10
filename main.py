@@ -15,6 +15,7 @@ def main():
     for i in range(4):
         led.value((i+1)%2)
         time.sleep(0.3)
+    led.value(0)
         
     edg_gap.main_loop()
 
