@@ -12,7 +12,7 @@ def test():
             assert ret == 0
             
             print("TEST pylint:", f)
-            cmd = '''pylint --disable=C,W0611,W0612,W0703,R1705 '%s' ''' % f
+            cmd = '''pylint --disable=C,W0611,W0612,W0703,R1705,R0915,R0912,R0914,W0613 '%s' ''' % f
             ret = os.system(cmd)
             assert ret == 0
     

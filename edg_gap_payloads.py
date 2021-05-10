@@ -9,7 +9,7 @@ import edg_utils
 FRAME_TYPE_EID = 0x30
 LAT_LON_RESOLUTION_MULTIPLIER = math.pow(10.0, 7)
 ECODROIDGPS_EID_BROADCAST_HEADER_BYTE_VERSION1 = 0xE1
-_ADV_TYPE_NAME = const(0x09)
+_ADV_TYPE_NAME = 0x09
 
 
 def eddystone_type_adv_data(data, frame_type=FRAME_TYPE_EID, name=None):
