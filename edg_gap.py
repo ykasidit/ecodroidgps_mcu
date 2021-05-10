@@ -27,8 +27,8 @@ def main_loop(test_mode=False, demo_position=False):
     if sys.platform != "esp32":
         raise Exception("unsupported platform: {}".format(sys.platform))
 
-    led = machine.Pin(2, machine.Pin.OUT)
-    led.value(0)
+    #rx is2 too already - led = machine.Pin(2, machine.Pin.OUT)
+    #led.value(0)
 
     ble = bluetooth.BLE()
     ble.active(True)
@@ -106,9 +106,11 @@ def main_loop(test_mode=False, demo_position=False):
                 continue
             
             # turn on led to signal we got new position
-            led.value(1)
+            #led.value(1)
             
-            prev_ts = ts            
+            prev_ts = ts
+
+            # ex snippet credit to https://github.com/alexmrqt/micropython-gps.git - examples/gps_simpletest.py
             print('Latitude: {} degrees'.format(gps.latitude))
             print('Longitude: {} degrees'.format(gps.longitude))
             print('Fix quality: {}'.format(gps.fix_quality))
@@ -140,7 +142,7 @@ def main_loop(test_mode=False, demo_position=False):
             ble.gap_advertise(500*1000, adv_data=gap_payload)            
             
             # turn off led
-            led.value(0)            
+            #led.value(0)            
         except Exception as ex:
             if test_mode:
                 raise ex
