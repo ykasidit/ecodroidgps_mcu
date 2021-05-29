@@ -1,5 +1,6 @@
 import math
 import os
+import hashlib
 
 
 def get_module_path():
@@ -28,3 +29,10 @@ def bytes_to_hex(ba):
         ba = bytearray(ba)
     print("ba:", ba)
     return ' '.join(('%02x' % x) for x in ba)
+
+
+def gen_lic_hex(bdaddr_hex):
+    sha = hashlib.sha1()
+    salt = "edgb"
+    sha.update(bdaddr_hex+salt)
+    return bytes_to_hex(sha.digest())

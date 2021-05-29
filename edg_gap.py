@@ -27,15 +27,25 @@ def main_loop(test_mode=False, demo_position=False):
     if sys.platform != "esp32":
         raise Exception("unsupported platform: {}".format(sys.platform))
 
-    #rx is2 too already - led = machine.Pin(2, machine.Pin.OUT)
-    #led.value(0)
+    led = machine.Pin(2, machine.Pin.OUT)
+    led.value(0)
 
     ble = bluetooth.BLE()
     ble.active(True)
     bdaddr = ble.config('mac')[1] # ex: (0, b'\x10R\x1cg\xfc\xbe')
     bdaddr_hex = edg_utils.bytes_to_hex(bdaddr)
-    print("bdaddr_hex:", bdaddr_hex)
-
+    lic_hex_target = edg_utils.gen_lic_hex(bdaddr_hex)
+    lic_hex = None
+    try:
+        with open('lic','rb') as f:
+            lic_hex = f.read().decode('ascii')
+    except Exception as ex:
+        print("WARNING: read lic_hex exception:", ex)
+    print("lic_hex:", lic_hex)
+    print("lic_hex_target:", lic_hex_target)
+    led.value(1)
+    if lic_hex is None or lic_hex != lic_hex_target:
+        raise Exception("invalid license")        
 
     #uart = UART(1, baudrate=9600)
     uart = UART(1, baudrate=9600, bits=8, parity=None, stop=1, tx=15, rx=2, rts=-1, cts=-1, txbuf=256, rxbuf=256, timeout=5000, timeout_char=2)
