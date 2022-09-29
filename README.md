@@ -1,3 +1,14 @@
+hardware
+--------
+
+- esp32 wroom powered by a usb power source
+- generic uart gnss device (used topgnss gn-803g avail on aliexpress) connected to it as below (all are next to each other
+  - power: 3v3
+  - ground: gnd
+  - tx: pin15
+  - rx: pin2
+
+
 how to flash the firmware
 -------------------------
 
@@ -36,7 +47,11 @@ it must output:
 it must show:
 TEST SUCCESS
 
-- test connect from 'Bluetooth GNSS' app with 'ecodroidgps broadcast mode' enabled in settings
+- diconeect from pc
+
+- wait for led on the esp32 to blink (make sure gnss device has a good sky view)
+
+- test connect from 'Bluetooth GNSS' app with 'ecodroidgps broadcast mode' enabled in settings - it must show valid lat/lon in the app
 
 - DONE
 
