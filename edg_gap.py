@@ -145,7 +145,7 @@ def main_loop(test_mode=False, demo_position=False):
 
             # create gap payload from position
             edg_payload = edg_gap_payloads.gen_ecodroidgps_gap_broadcast_buffer(pos["lat"], pos["lon"], pos["ts"])
-            gap_payload = edg_gap_payloads.eddystone_type_adv_data(edg_payload, name="EDG")
+            gap_payload = edg_gap_payloads.eddystone_type_adv_data(edg_payload, name="AZQGPS")
 
             # broadcast ble gap buffer
             print('payload: {}'.format(edg_utils.bytes_to_hex(gap_payload)))

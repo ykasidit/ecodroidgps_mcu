@@ -1,9 +1,13 @@
 import bluetooth
 import edg_utils
 import hashlib
+import sys
 
 
 def test():
+    if sys.platform != "esp32":
+        return  # this code is for esp32 only
+
     ble = bluetooth.BLE()
     ble.active(True)
     bdaddr = ble.config('mac')[1] # ex: (0, b'\x10R\x1cg\xfc\xbe')
@@ -11,7 +15,7 @@ def test():
     print("bdaddr_hex:", bdaddr_hex)
     lic_hex = edg_utils.gen_lic_hex(bdaddr_hex)
     print("lic_hex:", lic_hex)
-    with open('lic','wb') as f:
+    with open('/lic','wb') as f:
         f.write(lic_hex.encode('ascii'))
     
     

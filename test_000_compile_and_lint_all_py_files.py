@@ -6,6 +6,11 @@ def test():
     files = os.listdir('.')
     for f in files:
         if f.endswith(".py") and not f.startswith(".#"):
+            with open(f, "r") as fptr:
+                fcontents = fptr.read()
+                if "import bluetooth" in fcontents:
+                    print("ignore this file as contains micropython code...")
+                    continue
             print("TEST compile:", f)
             cmd = '''python3 -c "import ast; ast.parse(open('%s').read())"''' % f
             ret = os.system(cmd)

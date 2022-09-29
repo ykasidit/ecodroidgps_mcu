@@ -1,49 +1,65 @@
-how to build micropython esp32 firmware with double precision float
--------------------------------------------------------------------
-- Follow https://github.com/micropython/micropython/blob/master/ports/esp32/README.md - but before running final make, change .h file as per https://github.com/micropython/micropython/issues/4380
+how to flash the firmware
+-------------------------
 
+- Make a working Ubuntu 20.04 GNU\Linux machine.
 
-how to flash firmware
----------------------
+- make sure python (3.x) is installed and the pip command is working
 
-See https://micropython.org/download/esp32/
-See https://docs.micropython.org/en/latest/esp32/tutorial/intro.html
+- run:
+pip install esptool adafruit-ampy==1.1.0 pylint mpy-cross==1.14
 
 - erase:
 esptool.py --port /dev/ttyUSB0 erase_flash
 
-- flash ori micropython bin (somehow still required)
+- flash ori micropython bin: (somehow still required)
 esptool.py --chip esp32 --port /dev/ttyUSB0 -b 460800 write_flash -z 0x1000 esp32-idf4-20210202-v1.14.bin
 
 - test below must not get stuck:
+export AMPY_PORT=/dev/ttyUSB0
 ampy ls
 
-- Then, flash our micropython bin (this command is from the final output of make in above how to build micropython step - just added <port> and --verify):
-cd ~/micropython/ports/esp32
-/home/kasidit/.espressif/python_env/idf4.0_py2.7_env/bin/python ../../../esp-idf/components/esptool_py/esptool/esptool.py -p /dev/ttyUSB0 -b 460800 --before default_reset --after hard_reset write_flash --flash_mode dio --flash_size detect --flash_freq 40m 0x1000 build-GENERIC/bootloader/bootloader.bin 0x8000 build-GENERIC/partition_table/partition-table.bin 0x10000 build-GENERIC/micropython.bin --verify
+it must output:
+/boot.py
 
-- test below must not get stuck:
+- Then, flash our micropython bin:
+esptool.py -p /dev/ttyUSB0 -b 460800 --before default_reset --after hard_reset write_flash --flash_mode dio --flash_size detect --flash_freq 40m 0x1000 build-GENERIC/bootloader/bootloader.bin 0x8000 build-GENERIC/partition_table/partition-table.bin 0x10000 build-GENERIC/micropython.bin --verify
+
+- test below must not get stuck
 ampy ls
-  - It should show:
-  /boot.py
+
+it must output:
+/boot.py
+
+- clean, build, flash and test:
+./test.sh
+
+it must show:
+TEST SUCCESS
+
+- test connect from 'Bluetooth GNSS' app with 'ecodroidgps broadcast mode' enabled in settings
+
+- DONE
+
+---
 
 remove all files from connected esp32
 -------------------------------------
 
-- get back to this folder like:
-cd ~/ecodroidgps_mcu
-
-- then
+- run:
 ./clean_dev.sh
 
 - then verify:
 ampy ls
-  - output should be empty but not stuck
+
+- output should be empty but not stuck
 
 run tests on local python3
 -------------------------
 make clean
-make
+make -j`nproc`
+
+it must print:
+SUCCESS - ALL TESTS PASSED
 
 
 build .mpy (compiled micropython) files
@@ -84,9 +100,23 @@ test, see output of main operation but in limited loops
 
 ampy run test_edg_gap_main_loop.py 
 
-
 test, see output of main operation but in limited loops
 -------------------------------------------------------
 - reconnect power to device
 - open new emacs instance, shell:
 busybox microcom -s 115200 /dev/ttyUSB0
+
+
+how to build micropython esp32 firmware with double precision float
+-------------------------------------------------------------------
+
+- Follow https://github.com/micropython/micropython/blob/master/ports/esp32/README.md - but before running final make, change .h file as per https://github.com/micropython/micropython/issues/4380
+
+See https://micropython.org/download/esp32/
+See https://docs.micropython.org/en/latest/esp32/tutorial/intro.html
+
+
+(NOTE: just for reference - below is the original command to flash our micropython bin:
+(this command is from the final output of make in above how to build micropython step - just added <port> and --verify):
+cd ~/micropython/ports/esp32
+/home/kasidit/.espressif/python_env/idf4.0_py2.7_env/bin/python ../../../esp-idf/components/esptool_py/esptool/esptool.py -p /dev/ttyUSB0 -b 460800 --before default_reset --after hard_reset write_flash --flash_mode dio --flash_size detect --flash_freq 40m 0x1000 build-GENERIC/bootloader/bootloader.bin 0x8000 build-GENERIC/partition_table/partition-table.bin 0x10000 build-GENERIC/micropython.bin --verify)
