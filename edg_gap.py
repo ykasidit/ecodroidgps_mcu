@@ -71,9 +71,11 @@ def main_loop(test_mode=False, demo_position=False):
         i += 1
         if test_mode:
             print("NOTE: test_mode == True")
+            '''
             if i > test_mode_n_rounds:
                 print("test_mode == True and i > test_mode_n_rounds so exit now")
                 return
+            '''
 
         # clear and print current free RAM
         gc.collect()
@@ -89,67 +91,73 @@ def main_loop(test_mode=False, demo_position=False):
             current = utime.ticks_ms()
             if utime.ticks_diff(last_print, current) >= 1000:
                 last_print = current
-            if not gps.has_fix:
+            if gps.has_fix:
                 # Try again if we don't have a fix yet.
-                print('no gnss fix yet...')
-                continue
-        
-            # We have a fix! (gps.has_fix is true)
-            # Print out details about the fix like location, date, etc.
-            print('=' * 40)  # Print a separator line.
-            print('Fix timestamp: {}/{}/{} {:02}:{:02}:{:02}'.format(
-                gps.timestamp_utc[1],   # Grab parts of the time from the
-                gps.timestamp_utc[2],  # struct_time object that holds
-                gps.timestamp_utc[0],  # the fix time.  Note you might
-                gps.timestamp_utc[3],  # not get all data like year, day,
-                gps.timestamp_utc[4],   # month!
-                gps.timestamp_utc[5]))
-            ts = utime.mktime((gps.timestamp_utc[0], gps.timestamp_utc[1], gps.timestamp_utc[2], gps.timestamp_utc[3], gps.timestamp_utc[4], gps.timestamp_utc[5],0,0))
-            print("ts:", ts)
-            # check ts has changed
-            new_ts = prev_ts is None or ts != prev_ts
-            print("check new_ts:", new_ts)
-            if new_ts:                
-                pass # ok
+                print('no gnss fix yet...')        
+                # We have a fix! (gps.has_fix is true)
+                # Print out details about the fix like location, date, etc.
+                print('=' * 40)  # Print a separator line.
+                print('Fix timestamp: {}/{}/{} {:02}:{:02}:{:02}'.format(
+                    gps.timestamp_utc[1],   # Grab parts of the time from the
+                    gps.timestamp_utc[2],  # struct_time object that holds
+                    gps.timestamp_utc[0],  # the fix time.  Note you might
+                    gps.timestamp_utc[3],  # not get all data like year, day,
+                    gps.timestamp_utc[4],   # month!
+                    gps.timestamp_utc[5]))
+                ts = utime.mktime((gps.timestamp_utc[0], gps.timestamp_utc[1], gps.timestamp_utc[2], gps.timestamp_utc[3], gps.timestamp_utc[4], gps.timestamp_utc[5],0,0))
+                print("ts:", ts)
+                # check ts has changed
+                new_ts = prev_ts is None or ts != prev_ts
+                print("check new_ts:", new_ts)
+                if new_ts:                
+                    pass # ok
+                else:
+                    print("not new_ts so retry...")
+                    continue
+
+                # turn on led to signal we got new position
+                #led.value(1)
+
+                prev_ts = ts
+
+                # ex snippet credit to https://github.com/alexmrqt/micropython-gps.git - examples/gps_simpletest.py
+                print('Latitude: {} degrees'.format(gps.latitude))
+                print('Longitude: {} degrees'.format(gps.longitude))
+                print('Fix quality: {}'.format(gps.fix_quality))
+                pos["ts"] = ts
+                pos["lat"] = gps.latitude
+                pos["lon"] = gps.longitude
+
+                # Some attributes beyond latitude, longitude and timestamp are optional
+                # and might not be present.  Check if they're None before trying to use!
+                if gps.satellites is not None:
+                    print('# satellites: {}'.format(gps.satellites))
+                if gps.altitude_m is not None:
+                    print('Altitude: {} meters'.format(gps.altitude_m))
+                if gps.track_angle_deg is not None:
+                    print('Speed: {} knots'.format(gps.speed_knots))
+                if gps.track_angle_deg is not None:
+                    print('Track angle: {} degrees'.format(gps.track_angle_deg))
+                if gps.horizontal_dilution is not None:
+                    print('Horizontal dilution: {}'.format(gps.horizontal_dilution))
+                if gps.height_geoid is not None:
+                    print('Height geo ID: {} meters'.format(gps.height_geoid))
+                    
+                if test_mode:
+                    print("NOTE: test_mode == True and got fix so test SUCCESS - exit now")
+                    return
             else:
-                print("not new_ts so retry...")
-                continue
-            
-            # turn on led to signal we got new position
-            #led.value(1)
-            
-            prev_ts = ts
-
-            # ex snippet credit to https://github.com/alexmrqt/micropython-gps.git - examples/gps_simpletest.py
-            print('Latitude: {} degrees'.format(gps.latitude))
-            print('Longitude: {} degrees'.format(gps.longitude))
-            print('Fix quality: {}'.format(gps.fix_quality))
-            pos["ts"] = ts
-            pos["lat"] = gps.latitude
-            pos["lon"] = gps.longitude
-            # Some attributes beyond latitude, longitude and timestamp are optional
-            # and might not be present.  Check if they're None before trying to use!
-            if gps.satellites is not None:
-                print('# satellites: {}'.format(gps.satellites))
-            if gps.altitude_m is not None:
-                print('Altitude: {} meters'.format(gps.altitude_m))
-            if gps.track_angle_deg is not None:
-                print('Speed: {} knots'.format(gps.speed_knots))
-            if gps.track_angle_deg is not None:
-                print('Track angle: {} degrees'.format(gps.track_angle_deg))
-            if gps.horizontal_dilution is not None:
-                print('Horizontal dilution: {}'.format(gps.horizontal_dilution))
-            if gps.height_geoid is not None:
-                print('Height geo ID: {} meters'.format(gps.height_geoid))
-
+                pos["ts"] = 0
+                pos["lat"] = 0
+                pos["lon"] = 0
 
             # create gap payload from position
             edg_payload = edg_gap_payloads.gen_ecodroidgps_gap_broadcast_buffer(pos["lat"], pos["lon"], pos["ts"])
             gap_payload = edg_gap_payloads.eddystone_type_adv_data(edg_payload, name="AZQ")
 
             # broadcast ble gap buffer
-            print('payload: {}'.format(edg_utils.bytes_to_hex(gap_payload)))
-            ble.gap_advertise(500*1000, adv_data=gap_payload)            
+            print('ble.gap_advertise: adv_data: {}'.format(edg_utils.bytes_to_hex(gap_payload)))
+            ble.gap_advertise(0, adv_data=gap_payload)            
             
             # turn off led
             #led.value(0)            
