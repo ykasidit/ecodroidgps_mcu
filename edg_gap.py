@@ -149,7 +149,7 @@ def main_loop(test_mode=False, demo_position=False):
 
             # broadcast ble gap buffer
             print('payload: {}'.format(edg_utils.bytes_to_hex(gap_payload)))
-            ble.gap_advertise(500*1000, adv_data=gap_payload)            
+            ble.gap_advertise(30000, adv_data=gap_payload)
             
             # turn off led
             #led.value(0)            
