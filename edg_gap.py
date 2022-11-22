@@ -147,7 +147,7 @@ def main_loop(test_mode=False, demo_position=False):
                     print("NOTE: test_mode == True and got fix so test SUCCESS - exit now")
                     return
             else:
-                pos["ts"] = 0
+                pos["ts"] = i
                 pos["lat"] = 0
                 pos["lon"] = 0
 
@@ -157,7 +157,7 @@ def main_loop(test_mode=False, demo_position=False):
 
             # broadcast ble gap buffer
             print('ble.gap_advertise: adv_data: {}'.format(edg_utils.bytes_to_hex(gap_payload)))
-            ble.gap_advertise(0, adv_data=gap_payload)            
+            ble.gap_advertise(30*1000, adv_data=gap_payload, connectable=True)            
             
             # turn off led
             #led.value(0)            
