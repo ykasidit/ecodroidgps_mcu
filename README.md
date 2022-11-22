@@ -9,7 +9,13 @@ hardware
   - rx: pin2
 
 
-how to flash the firmware
+how to flash for dev (release)
+-------------------------
+export AMPY_PORT=/dev/ttyUSB0
+./flash.sh
+
+
+how to flash for dev (developer)
 -------------------------
 
 - Make a working Ubuntu 20.04 GNU\Linux machine.
