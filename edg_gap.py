@@ -19,6 +19,9 @@ import edg_gap_payloads
 import edg_gps_parser
 import edg_utils
 
+AZENQOS_GNSS_BROADCAST_SERVICE_UUID=bluetooth.UUID("AB100001-523c-4b88-a590-efe7522f4f86")
+
+
 
 def main_loop(test_mode=False, demo_position=False):
 
@@ -152,8 +155,11 @@ def main_loop(test_mode=False, demo_position=False):
                 pos["lon"] = 0
 
             # create gap payload from position
-            edg_payload = edg_gap_payloads.gen_ecodroidgps_gap_broadcast_buffer(pos["lat"], pos["lon"], pos["ts"])
-            gap_payload = edg_gap_payloads.eddystone_type_adv_data(edg_payload, name="AZQ")
+            edg_payload = edg_gap_payloads.gen_lat_lon_buffer(pos["lat"], pos["lon"])
+            gap_payload = advertising_payload(
+                services=[AZENQOS_GNSS_BROADCAST_SERVICE_UUID],
+                name=edg_payload
+            )
 
             # broadcast ble gap buffer
             print('ble.gap_advertise: adv_data: {}'.format(edg_utils.bytes_to_hex(gap_payload)))
