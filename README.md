@@ -8,6 +8,16 @@ hardware
   - tx: pin15
   - rx: pin2
 
+prerequisites
+-------------
+
+- Make a working Ubuntu 20.04 GNU\Linux machine.
+
+- make sure python (3.x) is installed and the pip command is working
+
+- install python dependencies:
+sudo pip install esptool adafruit-ampy==1.1.0 pylint mpy-cross==1.19.1
+
 
 how to flash for dev (release)
 -------------------------
@@ -17,13 +27,6 @@ export AMPY_PORT=/dev/ttyUSB0
 
 how to flash for dev (developer)
 -------------------------
-
-- Make a working Ubuntu 20.04 GNU\Linux machine.
-
-- make sure python (3.x) is installed and the pip command is working
-
-- run:
-pip install esptool adafruit-ampy==1.1.0 pylint mpy-cross==1.14
 
 - erase:
 esptool.py --port /dev/ttyUSB0 erase_flash

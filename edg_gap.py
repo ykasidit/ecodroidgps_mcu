@@ -62,7 +62,7 @@ def main_loop(test_mode=False, demo_position=False):
     last_print = utime.ticks_ms()
   
     i = -1
-    test_mode_n_rounds = 10    
+    test_mode_n_rounds = 1
     pos = {
         "lat": None,
         "lon": None,
@@ -74,11 +74,9 @@ def main_loop(test_mode=False, demo_position=False):
         i += 1
         if test_mode:
             print("NOTE: test_mode == True")
-            '''
             if i > test_mode_n_rounds:
                 print("test_mode == True and i > test_mode_n_rounds so exit now")
                 return
-            '''
 
         # clear and print current free RAM
         gc.collect()
@@ -163,7 +161,7 @@ def main_loop(test_mode=False, demo_position=False):
 
             # broadcast ble gap buffer
             print('ble.gap_advertise: adv_data: {}'.format(edg_utils.bytes_to_hex(gap_payload)))
-            ble.gap_advertise(30*1000, adv_data=gap_payload, connectable=True)            
+            ble.gap_advertise(61*1000, adv_data=gap_payload, connectable=True)            
             
             # turn off led
             #led.value(0)            

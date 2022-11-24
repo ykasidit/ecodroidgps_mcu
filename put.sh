@@ -8,7 +8,7 @@ exit_if_failed() {
 }
 
 echo "putting files..."
-find . -maxdepth 1 -name "*.py" -exec bash -c "echo \"put {}\" && ampy put {} || kill \$PPID"  \;
+find . -maxdepth 1 -name "*.mpy" -exec bash -c "echo \"put {}\" && ampy put {} || kill \$PPID"  \;
 exit_if_failed
 
 echo "final put main.py" # required otherwise somehow only with main.mpy it wont work on boot - confirmed in https://forum.micropython.org/viewtopic.php?t=8410
